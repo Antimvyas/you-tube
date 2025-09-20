@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const path = require("path")
 const mongoose = require("mongoose")
@@ -12,7 +13,7 @@ const { checkforauthentication } = require("./middlewear/authentication");
 app.set("view engine", "ejs")
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.resolve('./public')));
-mongoose.connect("mongodb://127.0.0.1:27017/blogify")
+mongoose.connect(process.env.MONGO_URL)
     .then(() => console.log("Connected to MongoDB"))
     .catch((err) => console.log("MongoDB connection error:", err
     ));
@@ -59,4 +60,5 @@ app.get("/", async (req, res) => {
 
 app.use('/user', userRouter);
 app.use('/blog', blogRouter);
-app.listen(8000, () => console.log("server on the port 8000 "));
+const PORT=process.env.PORT || 8000;
+app.listen(PORT, () => console.log("server on the port 8000 "));
