@@ -14,37 +14,20 @@ app.set("view engine", "ejs")
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.resolve('./public')));
 mongoose.connect(process.env.MONGO_URL)
-    .then(() => console.log("Connected to MongoDB"))
+    .then(() => {
+        console.log("Connected to MongoDB")
+        console.log(process.env.MONGO_URL)
+    })
     .catch((err) => console.log("MongoDB connection error:", err
     ));
+
 
 
 app.use(cookieParser());
 app.use(checkforauthentication('token'))
 
-app.get('/blog/add-new', (req, res) => {
-    res.render('addBlog', {
-        user: req.user || null,
-    });
-});
-// app.get('/blog/:id', async (req, res) => {
-//     console.log(req.params.id);
 
-//     try {
-//         const blogData = await blog.findById(req.params.id);
-//         if (!blogData) return res.status(404).send("Blog not found");
-
-//         res.render('blog', {
-//             user: req.user || null,
-//             blog: blogData
-//         });
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).send("Error loading blog");
-//     }
-// });
-
-app.set("views", path.resolve("./View"))
+app.set("views", path.resolve("./views"))
 app.get("/", async (req, res) => {
     try {
         const allblogs = await blog.find({});
