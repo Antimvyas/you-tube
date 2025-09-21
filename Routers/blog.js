@@ -1,7 +1,8 @@
 const express = require("express");
 const { model } = require("mongoose");
 const User = require("../Module/user");
-const Blog = require("../Module/blog")
+const Blog = require("../Module/blog");
+const Comment = require("../Module/comment")
 const router = express.Router();
 const path = require('path');
 const multer = require('multer')
@@ -22,6 +23,36 @@ router.get("/add-new", (req, res) => {
             user: req.user
         }
     )
+});
+router.get("/:id", async (req, res) => {
+    try {
+        console.log("Route hit with id:", req.params.id);
+
+        const blog = await Blog.findById(req.params.id).populate("createdby");
+        console.log("Blog:", blog);
+
+        const comments = await Comment.find({ blogId: req.params.id })
+                                      .populate("createdby");
+        console.log("Comments:", comments);
+
+        return res.render("blog", {
+            user: req.user,
+            blog,
+            comments
+        });
+    } catch (err) {
+        console.error("Error:", err);
+        res.status(500).send("Server Error");
+    }
+});
+
+router.post("/comment/:blogId",async(req,res)=>{
+    const comment=await Comment.create({
+        content:req.body.content,
+        blogId:req.params.blogId,
+        createdby:req.user._id
+    });
+    return res.redirect(`/blog/${req.params.blogId}`)
 });
 
 router.post("/", upload.single('coverImage'), async (req, res) => {

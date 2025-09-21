@@ -27,22 +27,22 @@ app.get('/blog/add-new', (req, res) => {
         user: req.user || null,
     });
 });
-app.get('/blog/:id', async (req, res) => {
-    console.log(req.params.id);
+// app.get('/blog/:id', async (req, res) => {
+//     console.log(req.params.id);
 
-    try {
-        const blogData = await blog.findById(req.params.id);
-        if (!blogData) return res.status(404).send("Blog not found");
+//     try {
+//         const blogData = await blog.findById(req.params.id);
+//         if (!blogData) return res.status(404).send("Blog not found");
 
-        res.render('blog', {
-            user: req.user || null,
-            blog: blogData
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error loading blog");
-    }
-});
+//         res.render('blog', {
+//             user: req.user || null,
+//             blog: blogData
+//         });
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send("Error loading blog");
+//     }
+// });
 
 app.set("views", path.resolve("./View"))
 app.get("/", async (req, res) => {
